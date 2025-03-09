@@ -6,33 +6,21 @@ from selenium.webdriver.support import expected_conditions as EC
 import re
 
 driver = webdriver.Chrome()
-try:
+
+while True:
+
     advertisement = input().replace(" ", "+")
     driver.get(f"https://www.avito.ru/all?q={advertisement}")
 
-    # Используем явное ожидание для поиска элементов
-    elements = WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located(
-            (By.CSS_SELECTOR, ".iva-item-sliderLink-Fvfau")
-        )
-    )
-        
-        # Проверяем, что элементы найдены
-    if elements:
-        first_element = elements[0]  # Берем первый элемент
-        link = first_element.get_attribute("href")
-        print(f"Переход по ссылке: {link}")
-        driver.get(link)
-    else:
-        print("Объявления не найдены")
+    no_results = driver.find_elements(By.CSS_SELECTOR, ".no-results-title-jho0M")
+    if no_results:
+        print("Ничего не найдено в выбранной области поиска")
+        print("Введите номер корректного объявления")
+        continue
 
-except Exception as e:
-    print(f"Произошла ошибка: {e}")
-
-finally:
-    # Вопрос о закрытии браузера: если нужно остаться на странице — уберите driver.quit()
-    # driver.quit()
-    pass
-
-input("Enter")
-driver.quit()
+    # Поиск объявлений
+    elements = driver.find_elements(By.CSS_SELECTOR, ".iva-item-sliderLink-Fvfau")
+    first_element = elements[0]
+    link = first_element.get_attribute("href")
+    print(f"Переход по ссылке: {link}")
+    driver.get(link)
