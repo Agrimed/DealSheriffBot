@@ -1,1 +1,5 @@
+AvitoParser/__pycache__/
+Database/__pycache__/
+.venv
 __pycache__/
+Advertesement.openapi.json
